@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\CandidateController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +18,9 @@ use App\Http\Controllers\FormController;
 
 Route::post('form', [FormController::class, 'post']);
 Route::get('form', [FormController::class, 'get']);
+
+// Untuk testing
+Route::get('candidate/{id}', [CandidateController::class, 'get']);
+Route::delete('candidate/{id}', [CandidateController::class, 'delete']);
+
+

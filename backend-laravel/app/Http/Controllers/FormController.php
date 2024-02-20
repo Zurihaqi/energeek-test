@@ -24,7 +24,7 @@ class FormController extends Controller
 
             // Rule untuk validasi
             $rules = [
-                'name' => 'required|string|max:255',
+                'name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
                 'email' => 'required|email|unique:candidates,email',
                 'phone' => 'required|unique:candidates,phone',
                 'job_id' => 'required|integer|exists:jobs,id',
@@ -42,6 +42,7 @@ class FormController extends Controller
                 'year.required' => 'year required.',
                 'skills.required' => 'skills required.',
 
+                'name.regex' => 'nama tidak dapat mengandung angka atau simbol',
                 'name.string' => 'name adalah string.',
                 'email.email' => 'email tidak valid.',
                 'job_id.integer' => 'job_id adalah integer.',
@@ -66,7 +67,7 @@ class FormController extends Controller
             }
 
             $candidate->name = $request->input('name');
-            $candidate->email = $request->input('email');
+            $candidate->email = strtolower($request->input('email'));
             $candidate->phone = $request->input('phone');
             $candidate->year = $request->input('year');
             $candidate->job_id = $request->input('job_id');
@@ -74,7 +75,7 @@ class FormController extends Controller
             $candidate->save();
 
             $skillIds = $request->input('skills');
-            // Kaitkan skill candidate dengan tabel skill_set
+            // Kaitkan skill dengan candidate
             $candidate->skills()->sync($skillIds);
 
             DB::commit();
