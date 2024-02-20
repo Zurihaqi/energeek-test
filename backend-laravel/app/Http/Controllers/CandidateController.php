@@ -15,7 +15,7 @@ class CandidateController extends Controller
             if (empty($candidate))
                 return response()->json(['status' => 'error', 'message' => "candidate dengan id $id tidak ditemukan."], 404);
 
-            return response()->json(['status' => 'success', 'candidate' => $candidate], 200);
+            return response()->json(['status' => 'success', 'candidate' => $candidate], 201);
         } catch (\Exception $e) {
             \Log::error('Exception caught: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
@@ -27,13 +27,14 @@ class CandidateController extends Controller
         }
     }
 
+    // Softdelete
     public function delete($id)
     {
         try {
             $candidate = Candidate::findOrFail($id);
             $candidate->delete();
 
-            return response()->json(['status' => 'success', 'message' => "Kandidat dengan id $id berhasil dihapus."], 200);
+            return response()->json(['status' => 'success', 'message' => "Kandidat dengan id $id berhasil dihapus."], 201);
         } catch (\Exception $e) {
             \Log::error('Exception caught: ' . $e->getMessage(), [
                 'file' => $e->getFile(),

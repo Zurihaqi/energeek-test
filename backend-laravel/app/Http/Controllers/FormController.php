@@ -48,7 +48,7 @@ class FormController extends Controller
                 'job_id.integer' => 'job_id adalah integer.',
                 'year.integer' => 'year adalah integer.',
 
-                'email.unique' => 'email sudah terdaftar.',
+                'email.unique' => 'Email yang anda masukkan sudah pernah melamar dijabatan tersebut, silahkan memilih jabatan yang lain.',
                 'phone.unique' => 'phone sudah terdaftar.',
                 'skills.*.exists' => 'id skill tidak ada dalam database.',
                 'job_id.exists' => 'job_id tidak ada dalam database.',
@@ -62,8 +62,11 @@ class FormController extends Controller
             $validator = Validator::make($request->all(), $rules, $messages);
 
             if ($validator->fails()) {
+                $errors = $validator->errors();
+                $errorMsg = $errors->first();
+
                 // Error handler untuk validator, kembalikan dalam bentuk json
-                return response()->json(['status' => 'error', 'error' => $validator->errors()], 422);
+                return response()->json(['status' => 'error', 'message' => $errorMsg], 422);
             }
 
             $candidate->name = $request->input('name');
@@ -105,7 +108,7 @@ class FormController extends Controller
             $jobs = Job::select('id', 'name')->get();
             $skills = Skill::select('id', 'name')->get();
 
-            return response()->json(['jobs' => $jobs, 'skills' => $skills], 200);
+            return response()->json(['jobs' => $jobs, 'skills' => $skills], 201);
         } catch (\Exception $e) {
             \Log::error('Exception caught: ' . $e->getMessage(), [
                 'file' => $e->getFile(),
